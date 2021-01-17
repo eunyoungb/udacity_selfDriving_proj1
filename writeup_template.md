@@ -1,11 +1,5 @@
 # **Finding Lane Lines on the Road** 
 
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file. But feel free to use some other method and submit a pdf if you prefer.
-
----
-
 **Finding Lane Lines on the Road**
 
 The goals / steps of this project are the following:
@@ -25,35 +19,37 @@ The goals / steps of this project are the following:
 
 My pipeline consisted of 5 steps. 
 
-Start from original image.
+Start from original image as below.
 
 <img src="./examples/original.jpg" width="384" height="216">
 
-#### 1. Convert image as Gray scale and apply Gausiaan smoothing with `cv2.GaussianBlur` (kernel_size = 5)
+#### 1. Convert image as Gray scale and apply Gausiaan smoothing with `cv2.GaussianBlur`
+For better outcome, make image smoother with Gaussian filer. So that, I could decrease noises.
+- Configuration : kernel_size = 5
 
 <img src="./examples/afterGaussian.jpg" width="384" height="216">
-For better outcome, make image smoother with Gaussian filer. So that, I could decrease noises
 
-#### 2. Edge detection wih `cv2.Canny` (low threshold = 30, high threshold = 150)
+#### 2. Edge detection wih `cv2.Canny`
+With Canny edge detection, find out all edges from the image.
+- Configuration : low threshold = 30, high threshold = 150
 
 <img src="./examples/afterCanny.jpg" width="384" height="216">
-With Canny edge detection, find out all edges from the image
 
 #### 3. Set makred region with `cv2.fillPoly` and `cv2.bitwise_and`
-
-<img src="./examples/afterRegion.jpg" width="384" height="216">
 Set interested-region where the driving line can be detected. I set region as squre shape
 - Image size = (540, 960)
 - Apex of sqaure : left up = (430, 325), left botton =(80, 540), right up = (430, 325), right bottom = (920, 540)
 
-#### 4. Fine lanes with `cv2.HoughLinesP` (rho = 2, theta = 1 radian, threshold = 15, min line length = 40, max line gap = 20)
+<img src="./examples/afterRegion.jpg" width="384" height="216">
+
+#### 4. Fine lanes with `cv2.HoughLinesP` 
+Find out whole lines from the image
+- configuration : rho = 2, theta = 1 radian, threshold = 15, min line length = 40, max line gap = 20
 
 <img src="./examples/afterHough.jpg" width="384" height="216">
-Find out whole lines from the image
+
 
 #### 5. Draw extrapolated line for left/right with `np.polyfit`
-
-<img src="./examples/afterPolyfit.jpg" width="384" height="216">
 
 ##### 5-1. Remove founded lines which are not driving lines definately
 From the founded lines, calulate the slope. If the slope is between -0.4~0.3, do not consider these line. Slope in this range is almost right-angled with the driving direction. Thus, those lines are not driving line with high possibilities.
@@ -64,6 +60,7 @@ From the calulated slope, consider positive slope as left line and negative slop
 ##### 5-3. Determin one single line
 Based on the filtered lines for each lane, apply `np.polyfit` to find single representative line
 
+<img src="./examples/afterPolyfit.jpg" width="384" height="216">
 
 ### 2. Identify potential shortcomings with your current pipeline
 
